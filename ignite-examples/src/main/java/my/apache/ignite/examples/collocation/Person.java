@@ -26,9 +26,6 @@ public class Person {
 	
 	private int companyId;
 
-	public Person() {
-	}
-	
 	public Person(String name, int age, int salary, int companyId) {
 		this.name = name;
 		this.age = age;
@@ -40,32 +37,16 @@ public class Person {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public int getAge() {
 		return age;
-	}
-
-	public void setAge(int age) {
-		this.age = age;
 	}
 
 	public int getSalary() {
 		return salary;
 	}
 
-	public void setSalary(int salary) {
-		this.salary = salary;
-	}
-
 	public int getCompanyId() {
 		return companyId;
-	}
-
-	public void setCompanyId(int companyId) {
-		this.companyId = companyId;
 	}
 
 	@Override

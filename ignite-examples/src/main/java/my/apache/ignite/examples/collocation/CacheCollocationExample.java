@@ -11,7 +11,6 @@ import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.Ignition;
 import org.apache.ignite.cache.CachePeekMode;
-import org.apache.ignite.cache.affinity.AffinityKey;
 import org.apache.ignite.lang.IgniteRunnable;
 import org.apache.ignite.resources.IgniteInstanceResource;
 
@@ -34,7 +33,7 @@ public class CacheCollocationExample {
 
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		
 		try (Ignite ignite = Ignition.start("examples/config/example-ignite.xml")) {
 			
@@ -44,24 +43,23 @@ public class CacheCollocationExample {
 			}
 
 			Cache<Integer, Company> companiesCache = ignite.getOrCreateCache("companiesCache");
-			Cache<AffinityKey<String>, Person> personCache = ignite.getOrCreateCache("personCache");
+			Cache<PersonKey, Person> personCache = ignite.getOrCreateCache("personCache");
 			
 			for (Company company : companies()) {
 				companiesCache.put(company.getId(), company);
 			}
 			
 			for (Person person : persons()) {
-				AffinityKey<String> key = new AffinityKey<>(person.getName(), person.getCompanyId());
-				personCache.put(key, person);
+				PersonKey personKey = new PersonKey(person.getName(), person.getCompanyId());
+				personCache.put(personKey, person);
 			}
 			
 			scanCaches(ignite, companiesCache.getName(), personCache.getName());
 			
-			Person p1 = personCache.get(new AffinityKey<>("Neha", 2));
+			Person p1 = personCache.get(new PersonKey("Neha", 2));
 			System.out.println("Person1 : " + p1);
 			
-			// How to retrieve data from cache with simple key ?
-			Person p2 = personCache.get(new AffinityKey<>("Peter"));
+			Person p2 = personCache.get(new PersonKey("Ebord Thawne", 1));
 			System.out.println("Person2 : " + p2);
 		}
 	}
@@ -112,12 +110,12 @@ public class CacheCollocationExample {
 					System.out.println("Company [Key : " + entry.getKey() + ", Val : " + entry.getValue() + "] located in Node : " + id8);
 				}
 				
-				IgniteCache<AffinityKey<String>, Person> psnCache = ignite.cache(personCache);
-				Iterator<Entry<AffinityKey<String>, Person>> iterator1 = psnCache.localEntries(CachePeekMode.PRIMARY).iterator();
+				IgniteCache<PersonKey, Person> psnCache = ignite.cache(personCache);
+				Iterator<Entry<PersonKey, Person>> iterator1 = psnCache.localEntries(CachePeekMode.PRIMARY).iterator();
 				
 				while (iterator1.hasNext()) {
-					Entry<AffinityKey<String>, Person> entry = iterator1.next();
-					System.out.println("Person [Key : " + entry.getKey().key() + ", Val : " + entry.getValue() + "] located in Node : " + id8);
+					Entry<PersonKey, Person> entry = iterator1.next();
+					System.out.println("Node : " + id8 + ", Person [Key : " + entry.getKey().getName() + ", Val : " + entry.getValue() + ']');
 				}
 			}
 		});
