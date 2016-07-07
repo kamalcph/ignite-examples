@@ -38,6 +38,11 @@
     <bean abstract="true" id="ignite.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
         <!-- Set to true to enable distributed class loading for examples, default is false. -->
         <property name="peerClassLoadingEnabled" value="true"/>
+        <property name="localHost" value="127.0.0.1"/>
+        
+        <property name="gridLogger">
+			<bean class="org.apache.ignite.logger.slf4j.Slf4jLogger"/>        
+        </property>
 
         <!-- Enable task execution events for examples. -->
         <property name="includeEventTypes">
@@ -54,12 +59,14 @@
                 <util:constant static-field="org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_PUT"/>
                 <util:constant static-field="org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_READ"/>
                 <util:constant static-field="org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_REMOVED"/>
+                
+                <util:constant static-field="org.apache.ignite.events.EventType.EVT_CACHE_REBALANCE_STOPPED"/>
             </list>
         </property>
         
         <property name="lifecycleBeans">
         	<list>
-        		<bean class="my.examples.ignite.lifecycle.MyLifeCycleBean"/>
+        		<bean class="my.apache.ignite.examples.lifecycle.MyLifeCycleBean"/>
         	</list>
         </property>
 
