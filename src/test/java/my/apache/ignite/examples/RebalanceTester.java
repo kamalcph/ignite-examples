@@ -17,7 +17,7 @@ import org.apache.ignite.events.EventType;
 import org.apache.ignite.internal.IgniteNodeAttributes;
 import org.apache.ignite.lang.IgnitePredicate;
 
-public class RebalanceTest {
+public class RebalanceTester {
 	
 	public static final String CACHE_NAME = "ON_HEAP_CACHE"; 
 	
