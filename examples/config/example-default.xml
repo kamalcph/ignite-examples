@@ -60,6 +60,7 @@
                 <util:constant static-field="org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_READ"/>
                 <util:constant static-field="org.apache.ignite.events.EventType.EVT_CACHE_OBJECT_REMOVED"/>
                 
+                <util:constant static-field="org.apache.ignite.events.EventType.EVT_CACHE_REBALANCE_PART_LOADED"/>
                 <util:constant static-field="org.apache.ignite.events.EventType.EVT_CACHE_REBALANCE_STOPPED"/>
             </list>
         </property>

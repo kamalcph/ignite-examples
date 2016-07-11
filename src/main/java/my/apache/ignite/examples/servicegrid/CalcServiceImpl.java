@@ -33,7 +33,7 @@ public class CalcServiceImpl implements CalcService {
 
 	@Override
 	public void cancel(ServiceContext ctx) {
-		logger.info("Service : {} got cancelled", ctx == null ? "" : ctx.name());
+		logger.info("Hello Service : {} got cancelled", ctx == null ? "" : ctx.name());
 	}
 
 	@Override

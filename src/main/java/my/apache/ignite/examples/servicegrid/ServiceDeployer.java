@@ -24,6 +24,7 @@ import my.apache.ignite.examples.NodeStartup;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;
+import org.apache.ignite.cluster.ClusterGroup;
 
 /**
  * Start one or more node using {@link NodeStartup} and run this
@@ -54,34 +55,44 @@ public class ServiceDeployer {
 		return ignite.services().serviceProxy(calcService, CalcService.class, sticky);
 	}
 	
-	public void useService() throws InterruptedException {
+	public void useService(boolean cancelService) throws InterruptedException {
 		for (int i=0; i<100; i++) {
-			CalcService calculator = getCalcService(false);
-			System.out.printf("%d + %d = %d%n", i, i+1, calculator.add(i, i+1));
-			System.out.printf("%d - %d = %d%n", i, i+1, calculator.sub(i, i+1));
-			System.out.println();
-			Thread.sleep(500);
 			
-			// Try to get the service from the remote server node
-			if (i == 50) {
-			//	cancel();
+			try {
+				CalcService calculator = getCalcService(false);
+				System.out.printf("%d + %d = %d%n", i, i+1, calculator.add(i, i+1));
+				System.out.printf("%d - %d = %d%n", i, i+1, calculator.sub(i, i+1));
+				System.out.println();
+				
+				// Try to get the service from the remote server node
+				if (cancelService && i == 50) {
+					close();
+					break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+			Thread.sleep(500);
 		}
 	}
 	
+	// Canceling a service will remove it's deployment from the grid. So, don't cancel it.
+	// Internally, Ignition.stop(true) cancels the local running Ignite Services.
 	public void cancel() {
-		ignite.services().cancel(calcService);
+		ClusterGroup grp = ignite.cluster().forNode(ignite.cluster().localNode());
+		ignite.services(grp).cancel(calcService);
 	}
 	
 	public void close() {
-		ignite.close();
+		Ignition.stop(false);
 	}
 	
 	public static void main(String[] args) throws InterruptedException, IOException {
 		
 		final ServiceDeployer deployer = new ServiceDeployer();
-		deployer.deployClusterSingletonService();
-		deployer.useService();
+		deployer.deployNodeSingletonService();
+		// deployer.useService(true);
+		deployer.useService(false);
 		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			
