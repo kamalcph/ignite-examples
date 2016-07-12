@@ -31,6 +31,9 @@ public class PersonKey implements Serializable {
 	@AffinityKeyMapped
 	private int companyId;
 	
+	public PersonKey() {
+	}
+	
 	public PersonKey(String name) {
 		this.name = name;
 	}

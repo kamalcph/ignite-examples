@@ -46,7 +46,14 @@
     	<artifactId>slf4j-log4j12</artifactId>
     	<version>1.6.1</version>
     </dependency>
-  </dependencies>
+    
+    <dependency>
+	    <groupId>org.apache.ignite</groupId>
+        <artifactId>ignite-cassandra</artifactId>
+        <version>1.6.0</version>
+    </dependency>
+    
+   </dependencies>
   
   <build>
   	<plugins>

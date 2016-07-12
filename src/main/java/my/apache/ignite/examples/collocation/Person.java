@@ -18,13 +18,19 @@
 
 package my.apache.ignite.examples.collocation;
 
-public class Person {
+import java.io.Serializable;
+
+public class Person implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private int age;
 	private int salary;
 	
 	private int companyId;
+	
+	public Person() {
+	}
 
 	public Person(String name, int age, int salary, int companyId) {
 		this.name = name;
