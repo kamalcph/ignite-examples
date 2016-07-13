@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import javax.cache.Cache.Entry;
 
+import org.junit.Assert;
 import my.apache.ignite.examples.collocation.Person;
 import my.apache.ignite.examples.collocation.PersonKey;
 import my.apache.ignite.examples.utils.TestsHelper;
@@ -30,48 +31,104 @@ import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.Ignition;
 import org.apache.ignite.cache.CachePeekMode;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CassandraCacheStoreExample {
 
+	private static Logger logger = LoggerFactory.getLogger(CassandraCacheStoreExample.class.getName());
+	private static Ignite ignite;
+	
+	@BeforeClass
+	public static void beforeClass() {
+		logger.info("Hello");
+		ignite = Ignition.start("examples/config/example-cassandra.xml");
+		logger.info("Ignite started");
+	}
+	
+	@AfterClass
+	public static void afterClass() {
+		Ignition.stop(true);
+		logger.info("Ignite Stopped");
+	}
+	
+	@Before
+	public void beforeMethod() {
+		logger.info("****** Test Started ******");
+	}
+	
+	@After
+	public void afterMethod() {
+		logger.info("****** Test Completed ******");
+	}
+	
 	public CassandraCacheStoreExample() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public static void main(String[] args) {
+	@Test
+	public void testPojoCache() {
 		
-		try (Ignite ignite = Ignition.start("examples/config/example-cassandra.xml"))
-		{
-			int cnt = 10_000;
-			System.out.println("*********Starting Cassandra Primitive Cache Test******");
-			IgniteCache<String, String> cache = ignite.getOrCreateCache("primitive_csndra_cache");
-			cache.putAll(TestsHelper.generateStringsEntries(cnt));
-			
-			for (int i = 0; i < cnt; i++) {
-				System.out.printf("[Key : %d], [Value : %s]%n", i, cache.get(Integer.toString(i)));
-			}
-			
-			int size=0;
-			Iterator<Entry<String, String>> iterator = cache.iterator();
-			while (iterator.hasNext()) {
-				iterator.next();
-				size++;
-			}
-			System.out.println("Total entries available in the cache :: " + size);
-			System.out.println("LocalSize of the cache : " + cache.localSize(CachePeekMode.ALL));
-			System.out.println("Size of the cache : " + cache.size(CachePeekMode.ALL));
-			System.out.println("**********Completed Cassandra Primitive Cache Test**************\n");
-			
-			
-			System.out.println("*********Starting Cassandra Blob Cache Test******");
-			IgniteCache<PersonKey, Person> blobCache = ignite.getOrCreateCache("blob_csndra_cache");
-			blobCache.putAll(TestsHelper.generatePersonKeyPersonsMap(cnt));
-			System.out.println("**********Completed Cassandra Blob Cache Test**************\n");
-			
-			/*System.out.println("*********Starting Cassandra Pojo Cache Test******");
-			IgniteCache<PersonKey, Person> pojoCache = ignite.getOrCreateCache("pojo_csndra_cache");
-			pojoCache.putAll(TestsHelper.generatePersonKeyPersonsMap(cnt));
-			System.out.println("**********Completed Cassandra Pojo Cache Test**************\n");*/
+		IgniteCache<PersonKey, Person> cache = ignite.getOrCreateCache("pojo_csndra_cache");
+		cache.putAll(TestsHelper.generatePersonKeyPersonsMap(100));
+		printSize(cache);
+	}
+	
+	/*@Test
+	public void testPojoCacheClear() {
+		IgniteCache<PersonKey, Person> cache = ignite.getOrCreateCache("pojo_csndra_cache");
+		cache.clear();
+		cache.loadCache(null, new Object[] {"Select * from hello.pojo_persons"});
+		Assert.assertEquals(100, cache.size());
+	}*/
+	
+	@Test
+	public void testPojoCacheRemoveAll() {
+		IgniteCache<PersonKey, Person> cache = ignite.getOrCreateCache("pojo_csndra_cache");
+		cache.removeAll();
+		cache.loadCache(null, new Object[] {"Select * from hello.pojo_persons"});
+		Assert.assertEquals(0, cache.size());
+	}
+
+	@Test
+	public void testBlobCache() {
+		int cnt = 10;
+		IgniteCache<PersonKey, Person> cache = ignite.getOrCreateCache("blob_csndra_cache");
+		cache.loadCache(null, new Object[] {"Select * from hello.blob_persons"});
+		cache.putAll(TestsHelper.generatePersonKeyPersonsMap(cnt));
+		printSize(cache);
+		Assert.assertEquals(cnt, cache.size());
+	}
+
+	@Test
+	public void testPrimitiveCache() {
+		int cnt = 5;
+		IgniteCache<String, String> cache = ignite.getOrCreateCache("primitive_csndra_cache");
+		cache.loadCache(null, new Object[] {"Select * from hello.primitive_xyz"});
+		cache.putAll(TestsHelper.generateStringsEntries(cnt));
+		
+		printSize(cache);
+		Assert.assertEquals(cnt, cache.size());
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void printSize(IgniteCache cache) {
+		
+		int size=0;
+		@SuppressWarnings("unchecked")
+		Iterator<Entry> iterator = cache.iterator();
+		while (iterator.hasNext()) {
+			iterator.next();
+			size++;
 		}
+		
+		System.out.println(">> Iterable No. of entries in the cache :: " + size);
+		System.out.println(">> No. of primary entries available in the cache : " + cache.localSize(CachePeekMode.PRIMARY));
+		System.out.println(">> Total No. of entries available in the cache across nodes : " + cache.size(CachePeekMode.PRIMARY));
 	}
 }
 

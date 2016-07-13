@@ -39,7 +39,7 @@
         
     <import resource="classpath:cassandra/connection-settings.xml" />
     <import resource="classpath:persistence/primitive/persistence-settings.xml" />
-         
+    
     <bean id="ignite.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
     	
     	<!-- Set to true to enable distributed class loading for examples, default is false. -->
@@ -50,14 +50,17 @@
 			<bean class="org.apache.ignite.logger.slf4j.Slf4jLogger"/>        
         </property>
         
+        <!-- <property name="lifecycleBeans">
+        	<list>
+        		<bean class="org.apache.ignite.cache.store.cassandra.bean.CassandraLifeCycleBean">
+        			<property name="jmxPort" value="9980"/>
+        			<property name="cassandraConfigFile" value="cassandra/embedded-cassandra.yaml"/>
+        		</bean>
+        	</list>
+        </property> -->
+        
         <property name="cacheConfiguration">
             <list>
-                <!-- Partitioned cache example configuration (Atomic mode). -->
-                <bean class="org.apache.ignite.configuration.CacheConfiguration">
-                    <property name="atomicityMode" value="ATOMIC"/>
-                    <property name="backups" value="1"/>
-                </bean>
-                
                 <bean class="org.apache.ignite.configuration.CacheConfiguration">
                     <property name="name" value="primitive_csndra_cache"/>
                     <property name="cacheMode" value="PARTITIONED"/>
@@ -68,7 +71,7 @@
                     <property name="copyOnRead" value="false"/>
                     <property name="eagerTtl" value="false"/>
                     <property name="memoryMode" value="OFFHEAP_TIERED"/>
-                    <property name="offHeapMaxMemory" value="1024"/>
+                    <property name="offHeapMaxMemory" value="1024000"/>
                     <property name="swapEnabled" value="false"/>
                     <property name="affinity">
                     	<bean class="org.apache.ignite.cache.affinity.rendezvous.RendezvousAffinityFunction">
@@ -95,7 +98,7 @@
                     <property name="copyOnRead" value="false"/>
                     <property name="eagerTtl" value="false"/>
                     <property name="memoryMode" value="OFFHEAP_TIERED"/>
-                    <property name="offHeapMaxMemory" value="10240"/>
+                    <property name="offHeapMaxMemory" value="1024000"/>
                     <property name="swapEnabled" value="false"/>
                     <property name="affinity">
                     	<bean class="org.apache.ignite.cache.affinity.rendezvous.RendezvousAffinityFunction">
@@ -112,7 +115,7 @@
                     <property name="readFromBackup" value="true"/>
                 </bean>
                 
-                <!-- <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
                     <property name="name" value="pojo_csndra_cache"/>
                     <property name="cacheMode" value="PARTITIONED"/>
                     <property name="atomicityMode" value="ATOMIC"/>
@@ -122,7 +125,7 @@
                     <property name="copyOnRead" value="false"/>
                     <property name="eagerTtl" value="false"/>
                     <property name="memoryMode" value="OFFHEAP_TIERED"/>
-                    <property name="offHeapMaxMemory" value="10240"/>
+                    <property name="offHeapMaxMemory" value="1024000"/>
                     <property name="swapEnabled" value="false"/>
                     <property name="affinity">
                     	<bean class="org.apache.ignite.cache.affinity.rendezvous.RendezvousAffinityFunction">
@@ -137,7 +140,7 @@
 					</property>
                     <property name="managementEnabled" value="true"/>
                     <property name="readFromBackup" value="true"/>
-                </bean> -->
+                </bean>
             </list>
         </property>
 
