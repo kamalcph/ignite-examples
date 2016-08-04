@@ -50,6 +50,17 @@
 				<entry key="workerGroup" value="sample" />
 			</map>
 		</property> -->
+		
+		<!-- IgniteSemaphore needs this configuration -->
+		<property name="atomicConfiguration">
+        	<bean class="org.apache.ignite.configuration.AtomicConfiguration">
+            	<!-- Set number of backups. -->
+            	<property name="backups" value="1"/>
+            
+            	<!-- Set number of sequence values to be reserved. -->
+            	<property name="atomicSequenceReserveSize" value="5000"/>
+        	</bean>
+    	</property>
 
         <!-- Enable task execution events for examples. -->
         <property name="includeEventTypes">
