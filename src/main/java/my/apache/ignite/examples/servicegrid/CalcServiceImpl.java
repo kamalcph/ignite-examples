@@ -1,22 +1,6 @@
-/** CalcServiceImpl.java -
-* @version      $Name$
-* @module       my.apache.ignite.examples.servicegrid
-* 
-* @purpose
-* @see
-*
-* @author   Kamal (kamal@nmsworks.co.in)
-*
-* @created  Jul 8, 2016
-* $Id$
-*
-* @bugs
-*
-* Copyright 2016-2017 NMSWorks Software Pvt Ltd. All rights reserved.
-* NMSWorks PROPRIETARY/CONFIDENTIAL. Use is subject to licence terms.
-*/ 
-
 package my.apache.ignite.examples.servicegrid;
+
+import java.util.concurrent.TimeUnit;
 
 import org.apache.ignite.services.ServiceContext;
 import org.slf4j.Logger;
@@ -33,17 +17,19 @@ public class CalcServiceImpl implements CalcService {
 
 	@Override
 	public void cancel(ServiceContext ctx) {
-		logger.info("Hello Service : {} got cancelled", ctx == null ? "" : ctx.name());
+		logger.info("Service : {} cancelled", ctx.name());
 	}
 
 	@Override
 	public void init(ServiceContext ctx) throws Exception {
-		logger.info("Service : {} got inited", ctx.name());
+		logger.info(">>> Service : initing..", ctx.name());
+		Thread.sleep(TimeUnit.MINUTES.toMillis(1));
+		logger.info("Service : {} inited", ctx.name());
 	}
 
 	@Override
 	public void execute(ServiceContext ctx) throws Exception {
-		logger.info("Service : {} got executed", ctx.name());
+		logger.info("Service : {} executed", ctx.name());
 	}
 
 	@Override

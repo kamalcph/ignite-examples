@@ -37,12 +37,19 @@
 
     <bean abstract="true" id="ignite.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
         <!-- Set to true to enable distributed class loading for examples, default is false. -->
+        <property name="gridName" value="xyz"/>
         <property name="peerClassLoadingEnabled" value="true"/>
         <property name="localHost" value="127.0.0.1"/>
         
         <property name="gridLogger">
 			<bean class="org.apache.ignite.logger.slf4j.Slf4jLogger"/>        
         </property>
+        
+        <!-- <property name="userAttributes">
+			<map>
+				<entry key="workerGroup" value="sample" />
+			</map>
+		</property> -->
 
         <!-- Enable task execution events for examples. -->
         <property name="includeEventTypes">
@@ -86,12 +93,22 @@
                         <property name="addresses">
                             <list>
                                 <!-- In distributed environment, replace with actual host IP address. -->
-                                <value>127.0.0.1:47500..47509</value>
+                                <value>127.0.0.1:48500..48509</value>
                             </list>
                         </property>
                     </bean>
                 </property>
             </bean>
         </property>
+        
+    <!--
+        Explicitly configure TCP communication SPI changing local port number 
+        for the nodes from the second cluster.
+    -->
+    <property name="communicationSpi">
+        <bean class="org.apache.ignite.spi.communication.tcp.TcpCommunicationSpi">
+            <property name="localPort" value="48100"/>
+        </bean>
+    </property>
     </bean>
 </beans>

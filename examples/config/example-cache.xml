@@ -36,7 +36,23 @@
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
+        
     <bean id="ignite.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
+    	
+    	<property name="gridName" value="xyz"/>
+    	<property name="peerClassLoadingEnabled" value="true"/>
+        <property name="localHost" value="127.0.0.1"/>
+        
+        <property name="gridLogger">
+			<bean class="org.apache.ignite.logger.slf4j.Slf4jLogger"/>        
+        </property>
+        
+        <property name="userAttributes">
+			<map>
+				<entry key="workerGroup" value="sample" />
+			</map>
+		</property>
+    
         <property name="cacheConfiguration">
             <list>
                 <!-- Partitioned cache example configuration (Atomic mode). -->
@@ -44,6 +60,29 @@
                     <property name="atomicityMode" value="ATOMIC"/>
                     <property name="backups" value="1"/>
                 </bean>
+                
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+					<property name="name" value="alarmcache" />
+					<property name="cacheMode" value="PARTITIONED" />
+					<property name="atomicityMode" value="ATOMIC" />
+					<property name="copyOnRead" value="false" />
+					<property name="startSize" value="200000" />
+					<property name="eagerTtl" value="false" />
+					<property name="memoryMode" value="OFFHEAP_TIERED" />
+					<property name="offHeapMaxMemory" value="0" />
+					<property name="rebalanceMode" value="SYNC" />
+					<property name="affinity">
+						<bean class="org.apache.ignite.cache.affinity.rendezvous.RendezvousAffinityFunction">
+							<property name="partitions" value="64" />
+						</bean>
+					</property>
+
+					<property name="nodeFilter">
+						<bean class="my.apache.ignite.examples.cache.CacheWithNodeFilter.NodePredicate"/>
+					</property>
+
+					<property name="managementEnabled" value="true" />
+				</bean>
             </list>
         </property>
 

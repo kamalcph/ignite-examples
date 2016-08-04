@@ -1,24 +1,8 @@
-/** NodeStartup.java -
-* @version      $Name$
-* @module       my.examples.ignite
-* 
-* @purpose
-* @see
-*
-* @author   Kamal (kamal@nmsworks.co.in)
-*
-* @created  Jun 3, 2016
-* $Id$
-*
-* @bugs
-*
-* Copyright 2016-2017 NMSWorks Software Pvt Ltd. All rights reserved.
-* NMSWorks PROPRIETARY/CONFIDENTIAL. Use is subject to licence terms.
-*/ 
-
 package my.apache.ignite.examples;
 
+import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;
+import org.apache.ignite.configuration.IgniteConfiguration;
 
 public class NodeStartup {
 
@@ -27,7 +11,10 @@ public class NodeStartup {
 	}
 
 	public static void main(String[] args) {
-		Ignition.start("examples/config/example-ignite.xml");
+		Ignite ignite = Ignition.start("examples/config/example-ignite.xml");
+		
+		IgniteConfiguration config = ignite.configuration();
+		System.out.println("Ignite configuration : " + config + ", attributes : " + config.getUserAttributes());
 	}
 }
 
