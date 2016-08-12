@@ -50,14 +50,14 @@
 			<bean class="org.apache.ignite.logger.slf4j.Slf4jLogger"/>        
         </property>
         
-        <!-- <property name="lifecycleBeans">
+        <property name="lifecycleBeans">
         	<list>
         		<bean class="org.apache.ignite.cache.store.cassandra.bean.CassandraLifeCycleBean">
         			<property name="jmxPort" value="9980"/>
-        			<property name="cassandraConfigFile" value="cassandra/embedded-cassandra.yaml"/>
+        			<property name="cassandraConfigFile" value="/home/kamal/git/ignite-examples/src/main/resources/cassandra/embedded-cassandra.yaml"/>
         		</bean>
         	</list>
-        </property> -->
+        </property>
         
         <property name="cacheConfiguration">
             <list>

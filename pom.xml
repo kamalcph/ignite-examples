@@ -13,6 +13,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cassandra-all.version>3.3</cassandra-all.version>
+        <metrics.version>3.1.0</metrics.version>
     </properties>
   
 
@@ -53,27 +54,39 @@
 	    <groupId>org.apache.ignite</groupId>
         <artifactId>ignite-cassandra</artifactId>
         <version>1.6.0</version>
+        <exclusions>
+        	<exclusion>
+        		<artifactId>metrics-core</artifactId>
+        		<groupId>com.codahale.metrics</groupId>
+        	</exclusion>
+        </exclusions>
     </dependency>
-  <!--   <dependency>
+    
+    <dependency>
     	<groupId>org.apache.ignite</groupId>
     	<artifactId>ignite-log4j</artifactId>
     	<version>1.6.0</version>
     </dependency>
-    
-    
-     Cassandra server
-        <dependency>
-            <groupId>org.apache.cassandra</groupId>
-            <artifactId>cassandra-all</artifactId>
-            <version>${cassandra-all.version}</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>log4j-over-slf4j</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency> -->
+
+	<!-- Cassandra server -->
+	<dependency>
+		<groupId>org.apache.cassandra</groupId>
+		<artifactId>cassandra-all</artifactId>
+		<version>${cassandra-all.version}</version>
+		<scope>provided</scope>
+		<exclusions>
+			<exclusion>
+				<artifactId>log4j-over-slf4j</artifactId>
+				<groupId>org.slf4j</groupId>
+			</exclusion>
+		</exclusions>
+	</dependency>
+
+	<dependency>
+		<groupId>io.dropwizard.metrics</groupId>
+		<artifactId>metrics-core</artifactId>
+		<version>${metrics.version}</version>
+	</dependency>
     
    </dependencies>
   
@@ -85,8 +98,8 @@
                 <version>2.5.1</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
           </plugin>
   	</plugins>
