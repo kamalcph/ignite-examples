@@ -112,6 +112,13 @@
             </bean>
         </property>
         
+        <!-- Default failoverSpi configuration -->
+        <property name="failoverSpi">
+			<bean class="org.apache.ignite.spi.failover.always.AlwaysFailoverSpi">
+				<property name="maximumFailoverAttempts" value="5" />
+			</bean>
+		</property>
+        
     <!--
         Explicitly configure TCP communication SPI changing local port number 
         for the nodes from the second cluster.
@@ -121,5 +128,26 @@
             <property name="localPort" value="48100"/>
         </bean>
     </property>
-    </bean>
+    
+    <property name="cacheConfiguration">
+			<list>
+				<bean class="org.apache.ignite.configuration.CacheConfiguration">
+					<property name="name" value="samplecache" />
+					<property name="cacheMode" value="PARTITIONED" />
+					<property name="atomicityMode" value="ATOMIC" />
+					<property name="eagerTtl" value="false" />
+					<property name="backups" value="1"/>
+					<!-- <property name="memoryMode" value="OFFHEAP_TIERED" />
+					<property name="offHeapMaxMemory" value="#{10 * 1024 * 1024}" /> -->
+					<property name="rebalanceMode" value="SYNC" />
+					<property name="swapEnabled" value="false" />
+					<property name="affinity">
+						<bean class="org.apache.ignite.cache.affinity.rendezvous.RendezvousAffinityFunction">
+							<property name="partitions" value="10" />
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
 </beans>
